@@ -1,36 +1,114 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frontend Interview Platform
+
+A modern, interactive platform for conducting frontend developer interviews. This platform provides a real-time coding environment where candidates can work on HTML, CSS, and TypeScript challenges while seeing immediate results.
+
+## Features
+
+- 🖥️ Real-time code editor with syntax highlighting
+- 👁️ Live preview of code changes
+- 🎨 Support for HTML, CSS, and TypeScript
+- 💾 Automatic code persistence
+- ⌨️ Keyboard shortcuts for quick navigation
+- 📱 Responsive design
+- 🔄 Resizable editor/preview panels
+- 🛡️ Error boundaries for stability
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Node.js 18.0.0 or later
+- npm 9.0.0 or later
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/fe-interview-typescript.git
+   cd fe-interview-typescript
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Usage
+
+### Keyboard Shortcuts
+
+- `Ctrl/Cmd + 1`: Switch to HTML editor
+- `Ctrl/Cmd + 2`: Switch to CSS editor
+- `Ctrl/Cmd + 3`: Switch to TypeScript editor
+
+### Code Persistence
+
+All code changes are automatically saved to the browser's local storage. This means candidates can refresh the page or come back later without losing their work.
+
+### Sample Challenge
+
+The platform comes with a pre-configured Todo App challenge that tests candidates' abilities to:
+- Structure semantic HTML
+- Style components with CSS
+- Implement TypeScript functionality
+- Handle user interactions
+- Manage state
+- Work with the DOM
+
+## Development
+
+### Project Structure
+
+```
+fe-interview-typescript/
+├── app/
+│   ├── components/
+│   │   ├── CodeEditor.tsx
+│   │   ├── Preview.tsx
+│   │   ├── TabBar.tsx
+│   │   └── ErrorBoundary.tsx
+│   ├── hooks/
+│   │   ├── useLocalStorage.ts
+│   │   └── useKeyboardShortcuts.ts
+│   ├── types/
+│   │   └── index.ts
+│   ├── layout.tsx
+│   └── page.tsx
+├── public/
+└── package.json
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Adding New Challenges
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To add new challenges, modify the `defaultCode` object in `app/page.tsx`. Each challenge should include:
+- HTML template
+- CSS styles
+- TypeScript functionality
+- Clear instructions for candidates
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deployment
 
-## Learn More
+The platform is designed to be deployed on Vercel:
 
-To learn more about Next.js, take a look at the following resources:
+1. Push your changes to GitHub
+2. Connect your repository to Vercel
+3. Deploy
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Contributing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is licensed under the MIT License - see the LICENSE file for details.

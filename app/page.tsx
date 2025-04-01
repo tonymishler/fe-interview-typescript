@@ -1,103 +1,141 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+import CodeEditor from './components/CodeEditor';
+import Preview from './components/Preview';
+import TabBar from './components/TabBar';
+import { CodeLanguage } from './types';
+import { useLocalStorage } from './hooks/useLocalStorage';
+import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import ChallengeInstructions from './components/ChallengeInstructions';
+
+const defaultCode = {
+  html: '<div id="app">\n  <h1>Todo App</h1>\n  <div class="todo-input">\n    <input type="text" id="newTodo" placeholder="Add a new todo">\n    <button onclick="addTodo()">Add</button>\n  </div>\n  <ul id="todoList"></ul>\n</div>',
+  css: 'body {\n  font-family: system-ui, sans-serif;\n  max-width: 600px;\n  margin: 2rem auto;\n  padding: 0 1rem;\n}\n\n.todo-input {\n  display: flex;\n  gap: 0.5rem;\n  margin-bottom: 1rem;\n}\n\ninput {\n  flex: 1;\n  padding: 0.5rem;\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n\nbutton {\n  padding: 0.5rem 1rem;\n  background: #0070f3;\n  color: white;\n  border: none;\n  border-radius: 4px;\n  cursor: pointer;\n}\n\nbutton:hover {\n  background: #0051cc;\n}\n\nul {\n  list-style: none;\n  padding: 0;\n}\n\nli {\n  display: flex;\n  align-items: center;\n  gap: 0.5rem;\n  padding: 0.5rem;\n  border-bottom: 1px solid #eee;\n  cursor: pointer;\n}\n\nli:last-child {\n  border-bottom: none;\n}\n\nli.completed span {\n  text-decoration: line-through;\n  color: #666;\n}',
+  typescript: `// Define your Todo type
+interface Todo {
+  id: number;
+  text: string;
+  completed: boolean;
+  created_at?: number;
+  completed_at?: number;
+}
+
+// Initialize todos array
+var todos: Todo[] = [];
+
+// Add a new todo item
+function addTodo() {
+  const input = document.getElementById("newTodo") as HTMLInputElement;
+  if (!input) return;
+  
+  const text = input.value.trim();
+  if (text === "") return;
+
+  const todo: Todo = {
+    id: Date.now(),
+    text: text,
+    completed: false
+  };
+
+  todos.push(todo);
+  input.value = "";
+  renderTodos();
+}
+
+// Render the todo list
+function renderTodos() {
+  const list = document.getElementById("todoList");
+  if (!list) return;
+  
+  // Clear the current list
+  list.innerHTML = "";
+
+  // TODO: Render your todos here
+  // Hint: Create and append elements to show each todo
+  // Don't forget to add event listeners for completing and deleting todos
+}
+
+// Initial render
+renderTodos();`
+};
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [activeTab, setActiveTab] = useState<CodeLanguage>('html');
+  const [code, setCode] = useLocalStorage('editor-code', defaultCode);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  useKeyboardShortcuts({ onTabChange: setActiveTab });
+
+  const handleCodeChange = (newCode: string) => {
+    setCode(prev => ({
+      ...prev,
+      [activeTab]: newCode
+    }));
+  };
+
+  const handleReset = () => {
+    setCode(defaultCode);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">
+            Frontend Interview Platform
+          </h1>
+          <button
+            onClick={handleReset}
+            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            Reset Code
+          </button>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        <ChallengeInstructions />
+        
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          <PanelGroup direction="horizontal">
+            <Panel defaultSize={50} minSize={30}>
+              <div className="h-full flex flex-col">
+                <div className="p-4 border-b">
+                  <div className="space-y-2">
+                    <TabBar active={activeTab} onTabChange={setActiveTab} />
+                    <div className="text-sm text-gray-500">
+                      Keyboard shortcuts: Ctrl/Cmd + 1 (HTML), 2 (CSS), 3 (TypeScript)
+                    </div>
+                  </div>
+                </div>
+                <div className="flex-1 p-4">
+                  <ErrorBoundary>
+                    <CodeEditor
+                      code={code[activeTab as keyof typeof code]}
+                      language={activeTab}
+                      onChange={handleCodeChange}
+                    />
+                  </ErrorBoundary>
+                </div>
+              </div>
+            </Panel>
+            
+            <PanelResizeHandle className="w-2 bg-gray-100 hover:bg-gray-200 transition-colors" />
+            
+            <Panel defaultSize={50} minSize={30}>
+              <div className="h-full p-4">
+                <ErrorBoundary>
+                  <Preview
+                    html={code.html}
+                    css={code.css}
+                    typescript={code.typescript}
+                  />
+                </ErrorBoundary>
+              </div>
+            </Panel>
+          </PanelGroup>
+        </div>
+      </div>
     </div>
   );
 }
