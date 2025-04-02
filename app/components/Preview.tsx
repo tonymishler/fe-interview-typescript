@@ -53,7 +53,7 @@ export default function Preview({ html, css, typescript }: PreviewProps) {
         ref={iframeRef}
         title="preview"
         className="w-full h-full border-none"
-        sandbox="allow-scripts"
+        sandbox="allow-scripts allow-same-origin"
       />
     </div>
   );
