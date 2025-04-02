@@ -13,14 +13,12 @@ import ChallengeInstructions from './components/ChallengeInstructions';
 
 const defaultCode = {
   html: '<div id="app">\n  <h1>Todo App</h1>\n  <div class="todo-input">\n    <input type="text" id="newTodo" placeholder="Add a new todo">\n    <button onclick="addTodo()">Add</button>\n  </div>\n  <ul id="todoList"></ul>\n</div>',
-  css: 'body {\n  font-family: system-ui, sans-serif;\n  max-width: 600px;\n  margin: 2rem auto;\n  padding: 0 1rem;\n}\n\n.todo-input {\n  display: flex;\n  gap: 0.5rem;\n  margin-bottom: 1rem;\n}\n\ninput {\n  flex: 1;\n  padding: 0.5rem;\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n\nbutton {\n  padding: 0.5rem 1rem;\n  background: #0070f3;\n  color: white;\n  border: none;\n  border-radius: 4px;\n  cursor: pointer;\n}\n\nbutton:hover {\n  background: #0051cc;\n}\n\nul {\n  list-style: none;\n  padding: 0;\n}\n\nli {\n  display: flex;\n  align-items: center;\n  gap: 0.5rem;\n  padding: 0.5rem;\n  border-bottom: 1px solid #eee;\n  position: relative;\n}\n\nli:last-child {\n  border-bottom: none;\n}\n\nli.completed span {\n  text-decoration: line-through;\n  color: #666;\n}\n\n.delete-btn {\n  display: none;\n  position: absolute;\n  right: 0.5rem;\n  color: #ff4444;\n  cursor: pointer;\n}\n\nli:hover .delete-btn {\n  display: block;\n}',
+  css: 'body {\n  font-family: system-ui, sans-serif;\n  max-width: 600px;\n  margin: 2rem auto;\n  padding: 0 1rem;\n}\n\n.todo-input {\n  display: flex;\n  gap: 0.5rem;\n  margin-bottom: 1rem;\n}\n\ninput {\n  flex: 1;\n  padding: 0.5rem;\n  border: 1px solid #ccc;\n  border-radius: 4px;\n}\n\nbutton {\n  padding: 0.5rem 1rem;\n  background: #0070f3;\n  color: white;\n  border: none;\n  border-radius: 4px;\n  cursor: pointer;\n}\n\nbutton:hover {\n  background: #0051cc;\n}\n\nul {\n  list-style: none;\n  padding: 0;\n}\n\nli {\n  display: flex;\n  align-items: center;\n  gap: 0.5rem;\n  padding: 0.5rem;\n  border-bottom: 1px solid #eee;\n}\n\nli:last-child {\n  border-bottom: none;\n}\n\nli.completed span {\n  text-decoration: line-through;\n  color: #666;\n}',
   typescript: `// Define your Todo type
 interface Todo {
   id: number;
   text: string;
   completed: boolean;
-  created_at?: number;
-  completed_at?: number;
 }
 
 // Initialize todos array
@@ -34,31 +32,10 @@ function addTodo() {
   const text = input.value.trim();
   if (text === "") return;
 
-  const todo: Todo = {
-    id: Date.now(),
-    text: text,
-    completed: false,
-    created_at: Date.now()
-  };
+  // TODO: Create and add a new todo item
+  // Hint: Use the Todo interface above
 
-  todos.push(todo);
   input.value = "";
-  renderTodos();
-}
-
-// Toggle todo completion
-function toggleTodo(id: number) {
-  const todo = todos.find(t => t.id === id);
-  if (todo) {
-    todo.completed = !todo.completed;
-    todo.completed_at = todo.completed ? Date.now() : undefined;
-    renderTodos();
-  }
-}
-
-// Delete a todo
-function deleteTodo(id: number) {
-  todos = todos.filter(t => t.id !== id);
   renderTodos();
 }
 
@@ -70,42 +47,10 @@ function renderTodos() {
   // Clear the current list
   list.innerHTML = "";
 
-  // Sort completed items to the bottom
-  const sortedTodos = [...todos].sort((a, b) => {
-    if (a.completed === b.completed) return 0;
-    return a.completed ? 1 : -1;
-  });
-
-  // Render each todo item
-  sortedTodos.forEach(todo => {
-    const li = document.createElement("li");
-    if (todo.completed) li.classList.add("completed");
-    
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = todo.completed;
-    checkbox.onclick = () => toggleTodo(todo.id);
-    
-    const span = document.createElement("span");
-    span.textContent = todo.text;
-    
-    const deleteBtn = document.createElement("span");
-    deleteBtn.textContent = "×";
-    deleteBtn.className = "delete-btn";
-    deleteBtn.onclick = (e) => {
-      e.stopPropagation();
-      deleteTodo(todo.id);
-    };
-    
-    li.appendChild(checkbox);
-    li.appendChild(span);
-    li.appendChild(deleteBtn);
-    list.appendChild(li);
-  });
-}
-
-// Initial render
-renderTodos();`
+  // TODO: Render your todos here
+  // Hint: Create and append elements to show each todo
+  // Don't forget to add event listeners for completing and deleting todos
+}`
 };
 
 export default function Home() {
